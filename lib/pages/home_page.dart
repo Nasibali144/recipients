@@ -13,8 +13,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController searchController = TextEditingController();
   List<User> items = [];
+  List<User> allUsers = [];
+
   bool isLoading = false;
 
   @override
@@ -28,6 +29,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
 
     items = HiveService.readUsers();
+    allUsers = items;
 
     isLoading = false;
     setState(() {});
@@ -40,6 +42,33 @@ class _HomePageState extends State<HomePage> {
       print(result);
       getAllData();
     }
+  }
+
+  void deleteUser(User user) async{
+    isLoading = true;
+    setState(() {});
+
+    items.remove(user);
+    allUsers.remove(user);
+
+    await HiveService.setUsers(items);
+    /// 1, 2, 3
+    /// 1, 2
+    ///
+    /// db: 1, 2
+    isLoading = false;
+    setState(() {});
+  }
+
+  void searchUser(String search) {
+    if(search.isEmpty) {
+      items = allUsers;
+    } else {
+      items = allUsers.where((element) {
+        return element.name.toLowerCase().contains(search.toLowerCase());
+      }).toList();
+    }
+    setState((){});
   }
 
   @override
@@ -71,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 child: TextField(
-                  controller: searchController,
+                  onChanged: searchUser,
                   style: const TextStyle(
                     fontSize: 22,
                     color: Colors.black,
@@ -135,7 +164,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             trailing: ElevatedButton(
-              onPressed: () {},
+              onPressed: () => deleteUser(items[index]),
               style: ElevatedButton.styleFrom(
                 elevation: 0,
                 primary: const Color.fromRGBO(55, 105, 235, 1),
@@ -144,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                 )
               ),
               child: const Text(
-                "Send",
+                "Delete",
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.white,

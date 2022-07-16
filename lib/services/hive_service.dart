@@ -24,7 +24,7 @@ class HiveService {
     return users;
   }
 
-  static Future<void> deleteUsers() async {
+  static Future<void> deleteAllUsers() async {
     var box = Hive.box(dbName);
     await box.clear();
   }
