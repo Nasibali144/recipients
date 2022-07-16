@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recipients/models/user_model.dart';
 import 'package:recipients/pages/detail_page.dart';
+import 'package:recipients/services/hive_service.dart';
 
 class HomePage extends StatefulWidget {
   static const id = "/home_page";
@@ -26,20 +27,19 @@ class _HomePageState extends State<HomePage> {
     isLoading = true;
     setState(() {});
 
-    items = [
-      User(1, "Ali", "Brother", "+998949244114", "localPath"),
-      User(2, "Bobur", "Friend", "+998949244114", "localPath"),
-      User(3, "Mo'min", "Brother", "+998949244114", "localPath"),
-      User(4, "Xurshid", "Brother", "+998949244114", "localPath"),
-      User(4, "Abdulaziz", "Brother", "+998949244114", "localPath"),
-    ];
+    items = HiveService.readUsers();
 
     isLoading = false;
     setState(() {});
   }
 
   void addNewUser() async {
-    await Navigator.of(context).pushNamed(DetailPage.id);
+    String? result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => const DetailPage()));
+
+    if(result != null && result == "refresh") {
+      print(result);
+      getAllData();
+    }
   }
 
   @override

@@ -54,13 +54,14 @@ class _DetailPageState extends State<DetailPage> {
 
       // store users
       await HiveService.setUsers(users);
+
       // close page
       closePage();
     }
   }
 
   void closePage() {
-    Navigator.pop(context);
+    Navigator.of(context).pop("refresh");
   }
 
   @override
