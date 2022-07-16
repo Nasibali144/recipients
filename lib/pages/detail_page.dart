@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:intl_phone_field/phone_number.dart';
 
 class DetailPage extends StatefulWidget {
   static const id = "/detail_page";
@@ -11,9 +12,41 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+
+  FocusNode nameFocus = FocusNode();
+  FocusNode relationShipFocus = FocusNode();
+  FocusNode phoneFocus = FocusNode();
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController relationShipController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+
+  void nextRelationShip() {
+    FocusScope.of(context).requestFocus(relationShipFocus);
+  }
+
+  void nextPhone () {
+    FocusScope.of(context).requestFocus(phoneFocus);
+  }
+
+  void getPhone(PhoneNumber? value) {
+    if(value!.completeNumber.length == 13) {
+      phoneFocus.unfocus();
+    }
+  }
+
+  void saveUser() {
+    String name = nameController.text.trim();
+    String relationShip = relationShipController.text.trim();
+    String phone = phoneController.text.trim();
+
+    print("$name, $relationShip, $phone");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
@@ -89,6 +122,8 @@ class _DetailPageState extends State<DetailPage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 25, right: 25, top: 10),
                     child: TextField(
+                      controller: nameController,
+                      focusNode: nameFocus,
                       autofocus: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -104,6 +139,8 @@ class _DetailPageState extends State<DetailPage> {
                         fontSize: 20,
                         color: Colors.black,
                       ),
+                      onEditingComplete: nextRelationShip,
+                      textInputAction: TextInputAction.next,
                     ),
                   ),
                   Padding(
@@ -132,6 +169,8 @@ class _DetailPageState extends State<DetailPage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 25, right: 25, top: 10),
                     child: TextField(
+                      controller: relationShipController,
+                      focusNode: relationShipFocus,
                       autofocus: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -147,6 +186,8 @@ class _DetailPageState extends State<DetailPage> {
                         fontSize: 20,
                         color: Colors.black,
                       ),
+                      onEditingComplete: nextPhone,
+                      textInputAction: TextInputAction.next,
                     ),
                   ),
                   Padding(
@@ -175,6 +216,8 @@ class _DetailPageState extends State<DetailPage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 25, right: 25, top: 10),
                     child: IntlPhoneField(
+                      controller: phoneController,
+                      focusNode: phoneFocus,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
@@ -189,10 +232,8 @@ class _DetailPageState extends State<DetailPage> {
                         fontSize: 20,
                         color: Colors.black,
                       ),
-                      initialCountryCode: 'IN',
-                      onChanged: (phone) {
-                        print(phone.completeNumber);
-                      },
+                      initialCountryCode: 'UZ',
+                      onChanged: getPhone,
                     ),
                   ),
                   Padding(
@@ -214,14 +255,15 @@ class _DetailPageState extends State<DetailPage> {
             ],
           ),
 
+          // #save
           Container(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               left: 25,
               right: 25,
               bottom: 70,
             ),
             child: MaterialButton(
-              onPressed: () {},
+              onPressed: saveUser,
               elevation: 0,
               height: 50,
               minWidth: double.infinity,
