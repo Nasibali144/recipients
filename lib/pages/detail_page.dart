@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
+import 'package:recipients/models/user_model.dart';
+import 'package:recipients/services/hive_service.dart';
 
 class DetailPage extends StatefulWidget {
   static const id = "/detail_page";
@@ -21,6 +23,8 @@ class _DetailPageState extends State<DetailPage> {
   TextEditingController relationShipController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
 
+  String phone = "";
+
   void nextRelationShip() {
     FocusScope.of(context).requestFocus(relationShipFocus);
   }
@@ -31,16 +35,32 @@ class _DetailPageState extends State<DetailPage> {
 
   void getPhone(PhoneNumber? value) {
     if(value!.completeNumber.length == 13) {
+      phone = value.completeNumber;
       phoneFocus.unfocus();
     }
   }
 
-  void saveUser() {
+  void saveUser() async {
     String name = nameController.text.trim();
     String relationShip = relationShipController.text.trim();
-    String phone = phoneController.text.trim();
 
-    print("$name, $relationShip, $phone");
+    if(name.isNotEmpty && relationShip.isNotEmpty) {
+      // read users
+      List<User> users = HiveService.readUsers();
+      User user = User(users.length, name, relationShip, phone, "userImage");
+
+      // add user to users list
+      users.add(user);
+
+      // store users
+      await HiveService.setUsers(users);
+      // close page
+      closePage();
+    }
+  }
+
+  void closePage() {
+    Navigator.pop(context);
   }
 
   @override
