@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
 
     items.remove(user);
-    allUsers.remove(user);
+    allUsers = items;
 
     await HiveService.setUsers(items);
     /// 1, 2, 3
