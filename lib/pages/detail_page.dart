@@ -3,6 +3,7 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:recipients/models/user_model.dart';
 import 'package:recipients/services/hive_service.dart';
+import 'package:recipients/services/pref_service.dart';
 
 class DetailPage extends StatefulWidget {
   static const id = "/detail_page";
@@ -46,14 +47,16 @@ class _DetailPageState extends State<DetailPage> {
 
     if(name.isNotEmpty && relationShip.isNotEmpty) {
       // read users
-      List<User> users = HiveService.readUsers();
+      // List<User> users = HiveService.readUsers();
+      List<User> users = await PrefService.readUsers();
       User user = User(users.length, name, relationShip, phone, "userImage");
 
       // add user to users list
       users.add(user);
 
       // store users
-      await HiveService.setUsers(users);
+      // await HiveService.setUsers(users);
+      await PrefService.setUsers(users);
 
       // close page
       closePage();

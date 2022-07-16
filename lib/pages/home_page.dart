@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:recipients/models/user_model.dart';
 import 'package:recipients/pages/detail_page.dart';
 import 'package:recipients/services/hive_service.dart';
+import 'package:recipients/services/pref_service.dart';
 
 class HomePage extends StatefulWidget {
   static const id = "/home_page";
@@ -28,7 +29,8 @@ class _HomePageState extends State<HomePage> {
     isLoading = true;
     setState(() {});
 
-    items = HiveService.readUsers();
+    // items = HiveService.readUsers();
+    items = await PrefService.readUsers();
     allUsers = items;
 
     isLoading = false;
@@ -51,7 +53,8 @@ class _HomePageState extends State<HomePage> {
     items.remove(user);
     allUsers = items;
 
-    await HiveService.setUsers(items);
+    // await HiveService.setUsers(items);
+    await PrefService.setUsers(items);
     /// 1, 2, 3
     /// 1, 2
     ///

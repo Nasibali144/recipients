@@ -19,9 +19,9 @@ class PrefService {
   static Future<List<User>> readUsers() async {
     var pref = await SharedPreferences.getInstance();
     String data = pref.getString((StorageKey.users.name)) ?? '[]';
-    List<Map<String, dynamic>> json = jsonDecode(data);
-    // List<User> users = json.map((item) => User.fromJson(item)).toList();
-    List<User> users = json.map(User.fromJson).toList();
+    List json = jsonDecode(data);
+    List<User> users = json.map((item) => User.fromJson(item)).toList();
+    // List<User> users = json.map(User.fromJson).toList();
     return users;
   }
 

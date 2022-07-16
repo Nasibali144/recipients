@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:recipients/pages/detail_page.dart';
 import 'package:recipients/services/hive_service.dart';
 
@@ -8,9 +6,9 @@ import 'pages/home_page.dart';
 
 void main() async {
 
-  WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
-  await Hive.openBox(HiveService.dbName);
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Hive.initFlutter();
+  // await Hive.openBox(HiveService.dbName);
 
   runApp(const MyApp());
 }

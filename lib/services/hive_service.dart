@@ -19,9 +19,9 @@ class HiveService {
   static List<User> readUsers() {
     var box = Hive.box(dbName);
     String data = box.get(StorageKeys.users.name, defaultValue: '[]');
-    List<Map<String, dynamic>> json = jsonDecode(data);
-    // List<User> users = json.map((item) => User.fromJson(item)).toList();
-    List<User> users = json.map(User.fromJson).toList();
+    List json = jsonDecode(data);
+    List<User> users = json.map((item) => User.fromJson(item)).toList();
+    // List<User> users = json.map(User.fromJson).toList();
     return users;
   }
 
